@@ -1,11 +1,15 @@
 {
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
+    "allowJs": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "rootDir": ".",
-    "outDir": "build"
+    "outDir": "build",
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false,
+    "sourceMap": true,
   },
-  "include": [
-    "src/**/*.ts",
-    "test/**/*.ts"
-  ]
+  "include": ["src/*.ts", "src/**/*.ts", "test/*.ts", "test/**/*.ts"],
+  "exclude": ["src/migration/*.ts"]
 }
