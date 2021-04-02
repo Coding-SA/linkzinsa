@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
-import { DefaultReturn } from "../interfaces/default-return";
-import { FirstStepUser } from "../interfaces/user";
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Post } from "@nestjs/common";
+import { DefaultReturn } from "../interfaces/default-return-interface";
 import { UserService } from "../services/user-service";
+import { FirstStepUser, SecondStepUser } from "../validations/user-validations";
 
 @Controller('users')
 export class UserController{
@@ -10,40 +10,58 @@ export class UserController{
 
     }
     @Post()
-    async create(@Body() data:FirstStepUser): Promise<DefaultReturn>{
+    async create(@Body() data:FirstStepUser): Promise<any>{
         try {
             const user = await this._userService.create(data);
 
+            const {password, ...rest} = user;
+
             return {
                 statusCode:201,
-                message: "Created"
+                message: "Created",
+                user: rest,
             }
         } catch (error) {
-            return {
-                statusCode:409,
-                message: "User already registered"
-            }  
+
+            throw new HttpException({
+                status: HttpStatus.PRECONDITION_FAILED,
+                error: 'User already registered',
+                message: 'User already registered'
+              }, HttpStatus.PRECONDITION_FAILED);
+
         }
     }
 
-    @Patch('{id}')
-    async regiter2StageUser(@Param('id') id:string): Promise<DefaultReturn>{
+    @Patch(':id')
+    async regiter2StageUser(@Param('id') id:string, @Body() data: SecondStepUser): Promise<DefaultReturn>{
         try {
+
+            await this._userService.additionalDataUser(id, data);
             return {
                 statusCode:200,
                 message: "User modified"
             }
         } catch (error) {
-            return {
-                statusCode: error.message === 'User not found' ? 404: 409,
+
+            const httpStatus = error.message === 'User not found' ? HttpStatus.PRECONDITION_FAILED:HttpStatus.NOT_FOUND
+            
+            throw new HttpException({
+                status: httpStatus,
+                error: error.message,
                 message: error.message
-            }  
+              },httpStatus);
         }
     }
 
     @Get()
     async list() {
-        return await this._userService.list();
+        try {
+            return await this._userService.list();
+        } catch (error) {
+            console.log(error);
+            return;
+        }
+            
     }
 
 
