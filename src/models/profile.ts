@@ -1,4 +1,4 @@
-import { AfterInsert, Column, Entity, JoinColumn, ManyToOne, OneToOne } from "typeorm";
+import { AfterInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import { BaseModel } from "./base_model";
 import { Link } from "./link";
 import { User } from "./user";
@@ -6,10 +6,10 @@ import { User } from "./user";
 @Entity('profile')
 export class Profile extends BaseModel{
 
-    @Column('varchar',{name:'title',nullable: false}) 
+    @Column('varchar',{name:'title',nullable: true}) 
     title:string;
 
-    @Column('varchar',{name:'url',nullable: false}) 
+    @Column('varchar',{name:'url',nullable: true}) 
     url: string;
     
     @Column('varchar',{name:'profile_icon_url', nullable: true}) 
@@ -21,9 +21,9 @@ export class Profile extends BaseModel{
     @Column('jsonb',{name:'theme', nullable: false}) 
     theme :{
         type: 'degrade'|'image'|'color';
-        image_url: string | undefined;
-        color_main: string | undefined;
-        color_secundary: string | undefined;
+        image_url?: string;
+        color_main?: string;
+        color_secundary?: string;
     }
 
     
@@ -34,7 +34,7 @@ export class Profile extends BaseModel{
     @JoinColumn()
     user:User;
 
-    @ManyToOne(() => Link, link=> link.profile )
+    @OneToMany(() => Link, link=> link.profile )
     links:Array<Link>
 
     constructor(obj: Partial<Profile> ){

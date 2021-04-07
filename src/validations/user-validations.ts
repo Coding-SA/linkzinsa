@@ -1,7 +1,7 @@
-import { ArrayContains, ArrayMinSize, IsEmail, IsString, Max, MaxLength, Min, MinLength } from "class-validator";
+import { ArrayContains, ArrayMinSize, IsAlphanumeric, IsEmail, IsString, Max, MaxLength, Min, MinLength } from "class-validator";
 
 export class FirstStepUser {
-	@IsString()
+	@IsAlphanumeric()
 	@MinLength(6)
 	@MaxLength(20)
     username:string;

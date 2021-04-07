@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { BaseModel } from "./base_model";
 import { Profile } from "./profile";
 
@@ -22,7 +22,7 @@ export class Link extends BaseModel{
     @Column('date',{name:'last_click_date',nullable: false}) 
     lastClickDate: Date;
 
-    @OneToMany(()=> Profile, profile => profile.links)
+    @ManyToOne(()=> Profile, profile => profile.links)
     profile: Profile;
 
     constructor(obj: Partial<Link> ){

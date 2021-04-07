@@ -27,7 +27,7 @@ export class User extends BaseModel{
 
     @OneToOne(()=> Profile)
     @JoinColumn()
-    Profile:Profile;
+    profile:Profile;
 
     constructor(obj: Partial<User> ){
         super();

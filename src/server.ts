@@ -5,7 +5,7 @@ import { ApiModule } from "./api.module";
 
 
 export async function initServer() {
-    const api = await NestFactory.create(ApiModule);
+    const api = await NestFactory.create(ApiModule,);
     
     api.useGlobalPipes(new ValidationPipe());
 

@@ -1,3 +1,4 @@
+import 'dotenv';
 import { createConnection } from "typeorm";
 import { initServer } from "./server";
 
