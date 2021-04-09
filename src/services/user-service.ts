@@ -57,4 +57,14 @@ export class UserService {
         return await User.find();
 
     }
+
+    async getByUsername(username:string){
+        console.log(username);
+        
+        return await User.findOne({
+            where: {username: username.toLowerCase()}
+        });
+    }
+
+
 }

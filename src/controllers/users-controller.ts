@@ -1,4 +1,5 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "../auth/jwt-auth-guard";
 import { DefaultReturn } from "../interfaces/default-return-interface";
 import { UserService } from "../services/user-service";
 import { FirstStepUser, SecondStepUser } from "../validations/user-validations";
@@ -53,6 +54,8 @@ export class UserController{
         }
     }
 
+
+    @UseGuards(JwtAuthGuard)
     @Get()
     async list() {
         try {
