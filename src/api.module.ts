@@ -3,9 +3,11 @@ import { JwtModule } from "@nestjs/jwt";
 import { jwtConstants } from "./auth/constants";
 import { JwtStrategy } from "./auth/jwt-strategy";
 import { AuthContoller } from "./controllers/auth-controller";
+import { IndexController } from "./controllers/index-controller";
 import { ProfileController } from "./controllers/profile-controller";
 import { UserController } from "./controllers/users-controller";
 import { AuthService } from "./services/auth-service";
+import { LinkService } from "./services/link-service";
 import { ProfileService } from "./services/profile-service";
 import { UserService } from "./services/user-service";
 
@@ -15,12 +17,14 @@ import { UserService } from "./services/user-service";
         AuthContoller,
         UserController,
         ProfileController,
+        IndexController,
     ],
     providers: [
         AuthService,
         UserService,
         ProfileService,
-        JwtStrategy
+        JwtStrategy,
+        LinkService
     ],
     imports:[
         JwtModule.register({

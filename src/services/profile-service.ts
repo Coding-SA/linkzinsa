@@ -2,11 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { StateData } from "../models/base_model";
 import { Profile } from "../models/profile";
 import { User } from "../models/user";
+import { LinkService } from "./link-service";
 
 const BASE_URL = process.env.BASE_URL;
 
 @Injectable()
 export class ProfileService{
+
+    constructor(private _linkService: LinkService){}
 
     async create(user:User){
         try {
@@ -41,13 +44,9 @@ export class ProfileService{
     }
 
     async getById(id: string){
-        const profile = await Profile.findOne(id);
-
-        if(!profile){
-            throw new Error('Profile not found');
-        }
-
-        return profile;
+        console.log(id);
+        
+        return await this.getProfile(id);
     }
 
     async getByUsername(username: string){
@@ -62,5 +61,29 @@ export class ProfileService{
         await profile.save();
 
         return 'Delected';
+    }
+
+    async getByUser(user: Partial<User>){
+
+        const profile = await this.getProfile({where:{
+            user
+        }});
+
+        const {createdAt, updatedAt, state, ...rest} = profile;
+        
+        rest.links = await this._linkService.getByProfile(profile);
+
+
+        return rest;
+    }
+
+    private async getProfile(condition) {
+        const profile = await Profile.findOne(condition);
+        
+        if(!profile){
+            throw new Error('Profile not found');
+        }
+
+        return profile;
     }
 }
