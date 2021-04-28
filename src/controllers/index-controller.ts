@@ -1,28 +1,17 @@
 import { Controller, Get, HttpStatus, Param } from "@nestjs/common";
+import { ProfileService } from "../services/profile-service";
 import * as Utils from '../utils';
 
 
 @Controller()
 export class IndexController{
+
+    constructor(private readonly _profileService: ProfileService){}
+
     @Get(':username')
-    getByUsername(@Param() username){
+    async getByUsername(@Param('username') username){
         try {
-            return {
-                "title":"",
-                "url": "http://localhost:3000/perfil1",
-                "profileIconUrl": "",
-                "bio":"",
-                "theme" :{
-                    "type": "color",
-                    "color_main": "rgb(57, 224, 155)",
-                },
-                "links":[{
-                    "title":"string",
-                    "url":"string",
-                    "image_url": "string",
-                    "isPriority": "false",
-                }]
-            };
+            return await this._profileService.getByUsername(username);
         } catch (error) {
             throw this.getAuthError(error.message);
         }

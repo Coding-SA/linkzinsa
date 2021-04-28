@@ -17,29 +17,11 @@ export class ProfileController {
     @Get('')
     async getById(@Request() req) {
         try {
+
             const { user } = req;
 
             return await this._profileService.getByUser(user);
 
-            // return {
-            //     "title": "",
-            //     "url": "http://localhost:3000/perfil1",
-            //     "profileIconUrl": "",
-            //     "bio": "",
-            //     "theme": {
-            //         "type": "color",
-            //         "color_main": "rgb(57, 224, 155)",
-            //     },
-            //     "view": 0,
-            //     "links": [{
-            //         "title": "string",
-            //         "url": "string",
-            //         "image_url": "string",
-            //         "isPriority": "false",
-            //         "timesClicked": 0,
-            //         "lastClickDate": "2021/02/01H13:00:00"
-            //     }]
-            // };
         } catch (error) {
             throw this.getAuthError(error.message);
         }
@@ -49,8 +31,9 @@ export class ProfileController {
     @UseGuards(JwtAuthGuard)
     @Patch(':profileId')
     @HttpCode(200)
-    updateData(@Param() profileId, @Body() profileData) {
+    async updateData(@Param('profileId') profileId, @Body() profileData) {
         try {
+            await this._profileService.update(profileId, profileData);
             return {
                 "statusCode": 200,
                 "message": "Profile modified"
@@ -64,8 +47,9 @@ export class ProfileController {
     @UseGuards(JwtAuthGuard)
     @Patch(':profileId/theme')
     @HttpCode(200)
-    updateThemeData(@Param() profileId, @Body() themeData) {
+    async updateThemeData(@Param('profileId') profileId, @Body() themeData) {
         try {
+            await this._profileService.updateTheme(profileId, themeData)
             return {
                 "statusCode": 200,
                 "message": "Profile modified"
@@ -98,8 +82,10 @@ export class ProfileController {
     @UseGuards(JwtAuthGuard)
     @Patch(':profileId/links/:linkId')
     @HttpCode(200)
-    updateLink(@Param() profileId, @Body() linkData) {
+    async updateLink(@Param() params, @Body() linkData) {
+        const {profileId, linkId} = params;
         try {
+            await this._linkService.updateLink(linkId, linkData);
             return {
                 "statusCode": 200,
                 "message": "Link modified"
@@ -108,8 +94,6 @@ export class ProfileController {
             throw this.getAuthError(error.message);
         }
     }
-
-
 
     private getAuthError(message: string) {
         const errors = {

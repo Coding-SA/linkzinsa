@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { StateData } from "../models/base_model";
 import { Link } from "../models/link";
 import { Profile } from "../models/profile";
 
@@ -11,6 +12,7 @@ export class LinkService {
             {
                 profile: new Profile({id: profileId}),
                 lastClickDate: new Date(Date.now()),
+                state: StateData.ACTIVE,
                 ...linkData
             });
 
@@ -25,7 +27,19 @@ export class LinkService {
                 profile
             }
         });
+    }
 
+    async updateLink(id:string, linkUpdate:Partial<Link>){
+        const link = await Link.findOne(id);
 
+        if(!link){
+            throw new Error("Link not found");
+        }
+
+        Object.assign(link, linkUpdate);
+
+        await link.save();
+
+        return link;
     }
 }
