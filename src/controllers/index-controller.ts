@@ -10,7 +10,7 @@ export class IndexController{
     constructor(private readonly _profileService: ProfileService){}
 
     @Get(':username')
-    async getByUsername(@Param('') params: UsernameParam){
+    async getByUsername(@Param() params: UsernameParam){
         const {username} = params;
         try {
             return await this._profileService.getByUsername(username);

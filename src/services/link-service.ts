@@ -18,7 +18,9 @@ export class LinkService {
 
         await link.save();
 
-        return link;
+        const { createdAt, updatedAt, state, ...newData } = link;
+
+        return newData as Link;
     }
     
     async getByProfile(profile: Partial<Profile>){
@@ -30,16 +32,35 @@ export class LinkService {
     }
 
     async updateLink(id:string, linkUpdate:Partial<Link>){
-        const link = await Link.findOne(id);
+        const link = await this.findLink(id);
+
+        return await this.update(link, linkUpdate);
+        
+    }
+
+    async setClicked(id:string) {
+        const link = await this.findLink(id);
+
+        link.timesClicked++;
+
+        return await this.update(link, link);
+    }
+
+    private async  update(link:Link, data:Partial<Link>){
+        Object.assign(link, data);
+
+        await link.save();
+
+        return link;
+    }
+
+    private async findLink(query){
+        const link = await Link.findOne(query);
 
         if(!link){
             throw new Error("Link not found");
         }
 
-        Object.assign(link, linkUpdate);
-
-        await link.save();
-
-        return link;
+        return link
     }
 }

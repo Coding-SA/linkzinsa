@@ -55,10 +55,11 @@ export class ProfileService {
     }
 
     async getByUsername(username: string) {
+        console.log(username);
         const profile = await getRepository(Profile)
             .createQueryBuilder('profile')
             .innerJoin('profile.user', 'user')
-            .innerJoinAndMapMany('profile.links', 'profile.links', 'links')
+            .leftJoinAndMapMany('profile.links', 'profile.links', 'links')
             .where('user.username = :username', { username })
             .getOne();
 

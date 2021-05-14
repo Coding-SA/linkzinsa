@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { log } from "node:console";
 import { StateData } from "../models/base_model";
 import { User } from "../models/user";
 import { SecondStepUser } from "../validations/user-validations";
@@ -54,7 +55,12 @@ export class UserService {
 
 
     async list() {
-        return await User.find();
+        const data = await User.find();
+
+        return await Promise.all(data.map(user=> {
+            const { createdAt, updatedAt, password, ...rest } = user; 
+            return rest;
+        }));
 
     }
 
