@@ -2,6 +2,7 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import { jwtConstants } from "../auth/constants";
 import { AuthService } from "../services/auth-service";
 import * as Utils from '../utils';
+import { LoginBody } from "../validations/auth-validations";
 
 
 @Controller('auth')
@@ -14,7 +15,7 @@ export class AuthContoller{
 
     @Post('login')
     @HttpCode(200)
-    async login(@Body() loginData){
+    async login(@Body() loginData: LoginBody){
         try {
             return await this._authService.login(loginData.username, loginData.password);
         } catch (error) {

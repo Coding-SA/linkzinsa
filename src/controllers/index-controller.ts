@@ -1,6 +1,7 @@
 import { Controller, Get, HttpStatus, Param } from "@nestjs/common";
 import { ProfileService } from "../services/profile-service";
 import * as Utils from '../utils';
+import { UsernameParam } from "../validations/user-validations";
 
 
 @Controller()
@@ -9,7 +10,8 @@ export class IndexController{
     constructor(private readonly _profileService: ProfileService){}
 
     @Get(':username')
-    async getByUsername(@Param('username') username){
+    async getByUsername(@Param('') params: UsernameParam){
+        const {username} = params;
         try {
             return await this._profileService.getByUsername(username);
         } catch (error) {

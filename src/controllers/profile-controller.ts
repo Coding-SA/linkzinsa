@@ -5,6 +5,8 @@ import { DefaultReturn } from "../interfaces/default-return-interface";
 import { LinkService } from "../services/link-service";
 import { ProfileService } from "../services/profile-service";
 import * as Utils from '../utils';
+import { CreateLinkBody, UpdateLinkBody } from "../validations/link-validation";
+import { ProfileLinkParam, ProfileParam, UpdateProfile, UpdateThemeProfileBody } from "../validations/profile-validation";
 
 
 @Controller('profiles')
@@ -31,7 +33,8 @@ export class ProfileController {
     @UseGuards(JwtAuthGuard)
     @Patch(':profileId')
     @HttpCode(200)
-    async updateData(@Param('profileId') profileId, @Body() profileData) {
+    async updateData(@Param() params: ProfileParam, @Body() profileData:UpdateProfile) {
+        const {profileId} = params;
         try {
             await this._profileService.update(profileId, profileData);
             return {
@@ -47,7 +50,8 @@ export class ProfileController {
     @UseGuards(JwtAuthGuard)
     @Patch(':profileId/theme')
     @HttpCode(200)
-    async updateThemeData(@Param('profileId') profileId, @Body() themeData) {
+    async updateThemeData(@Param() params: ProfileParam, @Body() themeData: UpdateThemeProfileBody) {
+        const {profileId} = params;
         try {
             await this._profileService.updateTheme(profileId, themeData)
             return {
@@ -62,7 +66,9 @@ export class ProfileController {
 
     @UseGuards(JwtAuthGuard)
     @Post(':profileId/links')
-    async addLink(@Param('profileId') profileId, @Body() linkData): Promise<DefaultReturn> {
+    async addLink(@Param() params: ProfileParam, @Body() linkData: CreateLinkBody): Promise<DefaultReturn> {
+        const {profileId} = params;
+
         try {
 
             const link = await this._linkService.create(profileId, linkData);
@@ -82,7 +88,7 @@ export class ProfileController {
     @UseGuards(JwtAuthGuard)
     @Patch(':profileId/links/:linkId')
     @HttpCode(200)
-    async updateLink(@Param() params, @Body() linkData) {
+    async updateLink(@Param() params: ProfileLinkParam, @Body() linkData: UpdateLinkBody) {
         const {profileId, linkId} = params;
         try {
             await this._linkService.updateLink(linkId, linkData);

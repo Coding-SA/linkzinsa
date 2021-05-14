@@ -23,3 +23,10 @@ export class SecondStepUser {
 	@ArrayMinSize(3)
 	category:Array<string>;
 }
+
+export class UsernameParam {
+	@IsAlphanumeric()
+	@MinLength(6)
+	@MaxLength(20)
+    username:string;
+}
